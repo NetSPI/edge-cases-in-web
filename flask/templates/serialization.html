@@ -1,0 +1,26 @@
+<html>
+<head>
+</head>
+<body>
+    <h1><a href="{{ url_for('index') }}">DEF CON Workshop</a> (Flask Serialization)</h1>
+    <h3>Add data to session:</h3>
+    <form action="{{ url_for('serialization') }}" method="post">
+        <table>
+            <tbody>
+                <tr>
+                    <td><input type="text" name="name" placeholder="name" /></td>
+                    <td><input type="text" name="value" placeholder="value" /></td>
+                    <td><input type="submit" value="add" onclick="this.form.submit();" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <hr>
+    <h3>Session contents:</h3>
+    <pre>{{ g.session }}</pre>
+    {% if g.get('error') %}
+    <h3>Errors:</h3>
+    <pre>{{ g.error }}</pre>
+    {% endif %}
+</body>
+</html>
