@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <h1><a href="{{ url_for('index') }}">DEF CON Workshop</a> (CSRF)</h1>
+    <h3>Update profile:</h3>
+    <form action="{{ url_for('csrf') }}" method="post">
+        <table>
+            <tbody>
+                <tr><td><input type="hidden" name="csrf_token" value="{{ g.session.csrf_token }}" /></td></tr>
+                <tr><td><input type="text" name="email" value="{{ request.form.get('email') or '' }}" placeholder="email address" /></td></tr>
+                <tr><td><input type="password" name="password" value="{{ request.form.get('password') or '' }}" placeholder="password" /></td></tr>
+                <tr><td><input type="password" name="confirm" value="{{ request.form.get('confirm') or '' }}" placeholder="confirm" /></td></tr>
+                <tr><td><input type="submit" value="Update" onclick="this.form.submit();" /></td></tr>
+            </tbody>
+        </table>
+    </form>
+    {% if message %}
+    <pre>{{ message }}</pre>
+    {% endif %}
+</body>
+</html>

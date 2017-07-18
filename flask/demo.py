@@ -26,7 +26,7 @@ def session_serializer(response):
 
 @app.before_request
 def session_deserializer():
-    g.session = {}
+    g.session = {'csrf_token': 'thisisacryptographicallystrongrandomtoken'}
     serialized_session = request.cookies.get('session')
     if serialized_session:
         try:
@@ -51,22 +51,42 @@ def serialization():
             g.session[name] = value
     return render_template('serialization.html')
 
+@app.route('/csrf', methods=['GET', 'POST'])
+def csrf():
+    message = None
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        if password == request.form.get('confirm'):
+            if request.form.get('csrf_token') == g.session.get('csrf_token'):
+                message = 'Update successful.'
+            else:
+                message = 'Update failed. CSRF detected.'
+        else:
+            message = 'Update failed. Passwords didn\'t match.'
+    return render_template('csrf.html', message=message)
+
+@app.route('/clickjack')
+def clickjack():
+    return render_template('clickjack.html')
+
 @app.route('/ssti', methods=['GET', 'POST'])
 def ssti():
     template = '''
+<!DOCTYPE html>
 <html>
 <head>
 </head>
 <body>
-    <h1><a href="{{ url_for('index') }}">DEF CON Workshop</a> (Flask SSTI)</h1>
+    <h1><a href="{{ url_for('index') }}">DEF CON Workshop</a> (SSTI)</h1>
     <h3>Welcome %s!</h3>
-    <h3>Enter Name:</h3>
+    <h3>Enter name:</h3>
     <form action="{{ url_for('ssti') }}" method="post">
         <table>
             <tbody>
                 <tr>
                     <td><input type="text" name="name" placeholder="name" /></td>
-                    <td><input type="submit" value="submit" onclick="this.form.submit();" /></td>
+                    <td><input type="submit" value="Submit" onclick="this.form.submit();" /></td>
                 </tr>
             </tbody>
         </table>
