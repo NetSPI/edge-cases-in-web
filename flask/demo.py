@@ -1,5 +1,5 @@
-from flask import Flask, Response, abort, flash, g, render_template, render_template_string, request
-from Queue import Queue
+from flask import Flask, Response, abort, flash, g, jsonify, render_template, render_template_string, request
+from hashlib import sha1
 import base64
 import cPickle
 import hmac
@@ -70,6 +70,23 @@ def csrf():
 def clickjack():
     return render_template('clickjack.html')
 
+@app.route('/cors-bypass')
+def cors_bypass():
+    return render_template('cors-bypass.html')
+
+@app.route('/api/users', methods=['POST'])
+def create_user():
+    jsonobj = request.get_json(force=True)
+    if not jsonobj:
+        abort(400)
+    user = {
+        'id': 53,
+        'username': jsonobj.get('username'),
+        'hash': sha1(jsonobj.get('username')+jsonobj.get('password')).hexdigest()
+    }
+    # store user
+    return jsonify({'user': user}), 201
+
 @app.route('/ssti', methods=['GET', 'POST'])
 def ssti():
     template = '''
@@ -78,7 +95,6 @@ def ssti():
 <head>
 </head>
 <body>
-    <h1><a href="{{ url_for('index') }}">DEF CON Workshop</a> (SSTI)</h1>
     <h3>Welcome %s!</h3>
     <h3>Enter name:</h3>
     <form action="{{ url_for('ssti') }}" method="post">
