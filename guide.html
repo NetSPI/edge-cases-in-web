@@ -20,15 +20,16 @@ var payload = JSON.stringify({"username":"user@email.com", "password":"123456"})
 function create_user(type) {
   var http;
   http = new XMLHttpRequest();
-  http.open("POST", "http://localhost:5000/api/users", true)
-  http.setRequestHeader('Content-Type', type)
+  http.open("POST", "http://localhost:5000/api/users", true);
+  http.setRequestHeader('Content-Type', type);
+  http.withCredentials = true;
   http.onreadystatechange = function() {
     if (http.readyState == 4) {
       var response = http.responseText;
       console.log(response);
     }
   }
-  http.send(payload)
+  http.send(payload);
 }
 </script>
 </head>
