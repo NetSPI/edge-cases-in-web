@@ -76,16 +76,19 @@ def cors_bypass():
 
 @app.route('/api/users', methods=['POST'])
 def create_user():
-    jsonobj = request.get_json(force=True)
-    if not jsonobj:
-        abort(400)
-    user = {
-        'id': 53,
-        'username': jsonobj.get('username'),
-        'hash': sha1(jsonobj.get('username')+jsonobj.get('password')).hexdigest()
-    }
-    # store user
-    return jsonify({'user': user}), 201
+    if request.cookies.get('session'):
+        jsonobj = request.get_json(force=True)
+        if not jsonobj:
+            abort(400)
+        user = {
+            'id': 53,
+            'username': jsonobj.get('username'),
+            'hash': sha1(jsonobj.get('username')+jsonobj.get('password')).hexdigest()
+        }
+        # store user
+        return jsonify({'user': user}), 201
+    else:
+        abort(401)
 
 @app.route('/ssti', methods=['GET', 'POST'])
 def ssti():

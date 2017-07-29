@@ -5,15 +5,15 @@
 function create_user_request(payload) {
   var http;
   http = new XMLHttpRequest();
-  http.open("POST", "/api/users", true)
-  http.setRequestHeader('Content-Type', 'application/json')
+  http.open("POST", "/api/users", true);
+  http.setRequestHeader('Content-Type', 'application/json');
   http.onreadystatechange = function() {
     if (http.readyState == 4) {
       var response = http.responseText;
       document.getElementById('response').textContent = response;
     }
   }
-  http.send(payload)
+  http.send(payload);
 }
 </script>
 </head>
